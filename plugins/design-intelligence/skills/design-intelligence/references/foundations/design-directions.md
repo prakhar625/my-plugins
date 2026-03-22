@@ -3,6 +3,10 @@
 ## Goal
 Guide aesthetic decisions through coherent design presets.
 
+## Prerequisites
+- [ ] Context gathering complete (audience, task, feel)
+- [ ] Domain exploration started (vocabulary, colors)
+
 ## The 6 Presets
 
 ### Precision
@@ -113,3 +117,20 @@ principles:
 anti-patterns:
   - "Pattern to avoid"
 ```
+
+## Validation Gates
+
+**Before finalizing direction:**
+- [ ] Direction matches audience expectations
+- [ ] Feel articulated in sensory terms
+- [ ] Domain exploration informs choice
+- [ ] User confirms direction
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Direction feels generic | Skipped domain exploration | Revisit vocabulary, colors, signature |
+| Mismatch with audience | Assumed without asking | Confirm with context questions |
+| Preset too rigid | Forced single preset | Consider blending or custom |
+| Vague direction | "Clean and modern" accepted | Push for specific sensory language |

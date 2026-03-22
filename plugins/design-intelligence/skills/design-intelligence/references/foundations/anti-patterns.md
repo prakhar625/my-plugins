@@ -3,6 +3,10 @@
 ## Goal
 Avoid AI-typical patterns that signal generic, low-effort output.
 
+## Prerequisites
+- [ ] Design direction established
+- [ ] Strictness level configured (default: strict)
+
 ## The AI Slop Test
 
 Before shipping any design, ask: "Could this have been the first result from an AI image generator?"

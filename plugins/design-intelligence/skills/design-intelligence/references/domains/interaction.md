@@ -3,6 +3,10 @@
 ## Goal
 Define consistent component states and feedback patterns.
 
+## Prerequisites
+- [ ] Color tokens established (for state variations)
+- [ ] Motion tokens established (for transitions)
+
 ## Component States
 
 Every interactive element needs these states:
@@ -84,3 +88,12 @@ Every interactive element needs these states:
 - [ ] Focus states are visible and high-contrast
 - [ ] Loading states for async operations
 - [ ] Touch targets ≥44px
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Missing focus styles | Removed for aesthetics | Add visible focus ring |
+| Incomplete states | Rush to ship | Define all 5 states before polish |
+| Tiny tap targets | Desktop-first thinking | Increase to 44px minimum |
+| No loading feedback | Async not considered | Add skeleton/spinner for >200ms |

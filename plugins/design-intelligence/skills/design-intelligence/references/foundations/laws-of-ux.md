@@ -3,6 +3,10 @@
 ## Goal
 Apply proven UX principles to design decisions.
 
+## Prerequisites
+- [ ] Context gathering complete (audience, task, feel)
+- [ ] Design direction established
+
 ## Laws
 
 ### Fitts's Law
@@ -54,3 +58,12 @@ Apply proven UX principles to design decisions.
 - [ ] Primary navigation ≤7 items
 - [ ] Loading states for operations >400ms
 - [ ] Related elements visually grouped
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Tiny tap targets | Mobile not considered | Increase to 44px minimum |
+| Overwhelming navigation | Too many top-level options | Group into 5-7 categories |
+| Perceived slowness | No loading feedback | Add progress indicators for >100ms |
+| Confusing layout | Related items separated | Use proximity and grouping |

@@ -3,6 +3,10 @@
 ## Goal
 Create consistent spatial rhythm through a systematic scale.
 
+## Prerequisites
+- [ ] Design direction established (affects density)
+- [ ] Target platforms identified (mobile needs larger spacing)
+
 ## Base Unit
 
 Choose one:
@@ -56,3 +60,12 @@ Maintain consistent line-height multiples:
 - [ ] No arbitrary pixel values
 - [ ] Consistent rhythm across components
 - [ ] Touch targets ≥44px (mobile)
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Cramped interface | Base unit too small | Switch to 8px base |
+| Inconsistent feel | Mixed arbitrary values | Audit and replace with scale tokens |
+| Poor mobile UX | Desktop spacing on mobile | Responsive spacing adjustments |
+| Broken rhythm | Ignoring line-height multiples | Align margins to baseline grid |

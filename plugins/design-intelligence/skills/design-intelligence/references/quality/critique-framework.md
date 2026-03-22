@@ -3,6 +3,11 @@
 ## Goal
 Evaluate design effectiveness through structured tests.
 
+## Prerequisites
+- [ ] Design direction established (provides evaluation criteria)
+- [ ] Initial design/mockup complete (something to critique)
+- [ ] Typography and color choices made (for Swap Test)
+
 ## The Three Tests
 
 ### 1. Swap Test
@@ -94,3 +99,13 @@ Evaluate design effectiveness through structured tests.
 - [ ] Issues documented with specifics
 - [ ] Recommendations are actionable
 - [ ] Priority clearly assigned
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Generic results | Tests run superficially | Apply tests thoroughly with specific examples |
+| No actionable fixes | Critique without solutions | Every finding needs a concrete recommendation |
+| Ignored findings | No priority system | Assign Critical/Important/Minor to each issue |
+| Defensive reaction | Critique feels personal | Focus on design decisions, not designer |
+| Premature critique | Design too early stage | Wait for mockup stage for full critique |

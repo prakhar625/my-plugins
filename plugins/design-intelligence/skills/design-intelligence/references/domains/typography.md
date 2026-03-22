@@ -3,6 +3,10 @@
 ## Goal
 Establish typographic foundations that reinforce the design direction.
 
+## Prerequisites
+- [ ] Design direction established
+- [ ] Audience context gathered (expertise level affects complexity)
+
 ## Type Scales
 
 Use harmonious ratios:
@@ -59,3 +63,12 @@ Enable when available:
 - [ ] Line heights set per context
 - [ ] No more than 2 font families
 - [ ] Scale ratio matches direction
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Poor readability | Base size too small | Increase to 16px minimum |
+| Visual monotony | Single weight used | Introduce heading/body contrast |
+| Font loading issues | Too many weights | Limit to 3-4 weights total |
+| Inconsistent scale | Ad-hoc sizes | Use defined scale ratio |

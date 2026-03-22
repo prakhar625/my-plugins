@@ -3,6 +3,11 @@
 ## Goal
 Add purposeful audio feedback when appropriate.
 
+## Prerequisites
+- [ ] Core design system complete (sound is optional layer)
+- [ ] Interaction states defined (triggers for sound)
+- [ ] Accessibility requirements confirmed (visual equivalents exist)
+
 ## When to Use Sound
 
 ### Appropriate Uses
@@ -78,3 +83,14 @@ When enabled:
 - [ ] Sounds are cohesive (palette defined)
 - [ ] Duration appropriate for context
 - [ ] Volume is comfortable
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| No visual fallback | Sound as primary feedback | Add visual equivalent for every sound |
+| Cannot disable | Missing user control | Add sound toggle in settings |
+| Startling volume | Not tested on headphones | Default to quiet, test multiple devices |
+| Incoherent palette | Sounds added ad-hoc | Define sound palette upfront like colors |
+| Overuse | Sound on every interaction | Limit to meaningful moments (success, error, notification) |
+| Accessibility failure | Ignored reduced-motion | Disable or reduce audio for prefers-reduced-motion |

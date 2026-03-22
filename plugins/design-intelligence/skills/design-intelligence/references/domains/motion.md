@@ -3,6 +3,10 @@
 ## Goal
 Add purposeful motion that enhances rather than distracts.
 
+## Prerequisites
+- [ ] Design direction established (affects motion character)
+- [ ] Accessibility requirements confirmed (reduced motion support)
+
 ## Motion Decision Framework
 
 1. **Should it animate?**
@@ -83,3 +87,12 @@ Fallback: opacity-only transitions
 - [ ] Durations ≤400ms for UI
 - [ ] prefers-reduced-motion handled
 - [ ] No bounce easing (unless direction allows)
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Motion feels slow | Durations too long | Keep UI feedback under 250ms |
+| Accessibility issues | No reduced-motion support | Add prefers-reduced-motion media query |
+| Feels cheap | Bounce/spring easing overused | Use professional ease-out curves |
+| Distracting | Motion without purpose | Remove or simplify |

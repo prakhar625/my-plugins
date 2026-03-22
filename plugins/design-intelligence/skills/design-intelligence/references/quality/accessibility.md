@@ -3,6 +3,11 @@
 ## Goal
 Ensure designs meet WCAG accessibility standards.
 
+## Prerequisites
+- [ ] Color tokens established (for contrast testing)
+- [ ] Typography scale defined (for text sizing)
+- [ ] Component states designed (for focus/disabled states)
+
 ## WCAG 2.1 Levels
 
 ### Level AA (Required Default)
@@ -89,3 +94,14 @@ Use appropriate elements:
 - [ ] Form inputs have labels
 - [ ] Touch targets ≥44px
 - [ ] prefers-reduced-motion respected
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Failed contrast | Colors chosen for aesthetics only | Test all text/background combos with contrast checker |
+| Invisible focus | Focus styles removed for "clean" look | Add visible focus ring (2px solid, high contrast) |
+| Keyboard traps | Modal/dropdown logic incomplete | Ensure Escape closes, Tab cycles correctly |
+| Missing labels | Placeholder used instead of label | Add explicit `<label>` elements |
+| Tiny touch targets | Desktop-first design | Increase to 44×44px minimum |
+| Motion sickness | Ignored reduced-motion preference | Add prefers-reduced-motion media query |

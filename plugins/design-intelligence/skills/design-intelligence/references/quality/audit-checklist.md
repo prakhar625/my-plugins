@@ -3,6 +3,11 @@
 ## Goal
 Systematic quality verification for design outputs.
 
+## Prerequisites
+- [ ] Design tokens established (color, typography, spacing, motion)
+- [ ] Component implementation complete
+- [ ] All states defined (default, hover, active, focus, disabled)
+
 ## Anti-Slop Checklist
 
 - [ ] No gray text on colored backgrounds

@@ -3,6 +3,10 @@
 ## Goal
 Build a color system rooted in the product's domain and direction.
 
+## Prerequisites
+- [ ] Domain exploration complete (5+ domain colors identified)
+- [ ] Design direction established
+
 ## OKLCH Color Space
 
 Use OKLCH for perceptually uniform colors:
@@ -66,3 +70,12 @@ Define purpose, not just color:
 - [ ] No pure gray (#808080 or oklch with 0 chroma)
 - [ ] Semantic colors defined (success, warning, error)
 - [ ] Colors trace to domain exploration
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| Poor contrast | Colors not tested | Run contrast checker, adjust lightness |
+| Generic palette | Domain not explored | Revisit domain colors |
+| Muddy neutrals | Pure gray used | Add tint from primary hue |
+| Inconsistent meanings | No semantic mapping | Define semantic color tokens |
