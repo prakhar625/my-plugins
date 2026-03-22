@@ -80,43 +80,113 @@ The main SKILL.md contains:
 An intelligent design partner for product UI. Explores context before prescribing,
 translates vague feelings into concrete decisions, and maintains persistent memory.
 
+## Terminology
+
+- **Domain exploration**: Understanding the product's world — vocabulary, colors,
+  constraints — before making design decisions
+- **Direction**: The aesthetic personality (preset, blend, or custom) that guides
+  all design choices
+- **Tokens**: Named values (colors, spacing, typography, motion) that form the
+  design system's foundation
+- **Anti-slop**: Actively avoiding AI-typical patterns that signal generic output
+- **Signature element**: A distinctive design choice unique to this product
+
 ## Workflow
 Discover → Define → Design → Document → Audit
 
+---
+
 ## Phase 1 — Context Gathering
 
-**GATE — Do not proceed until:**
-- [ ] Audience defined (who is this human, not "users")
-- [ ] Core task identified (the verb)
-- [ ] Feel articulated (sensory language, not "clean and modern")
+**STOP — Never skip this phase.** You cannot infer context from the codebase.
+
+Ask the user:
+- Who is the primary user? (role, context, expertise — NOT "users")
+- What must they accomplish? (the verb)
+- How should this feel? (sensory language — NOT "clean and modern")
 
 Read `references/foundations/design-directions.md` for exploration framework.
 
+**GATE — Do not proceed until:**
+- [ ] Audience defined with specifics
+- [ ] Core task identified as a verb
+- [ ] Feel articulated in sensory language
+
+---
+
 ## Phase 2 — Domain Exploration
 
-Guide through:
-- 5+ domain vocabulary concepts
-- 5+ naturally occurring colors
+Read `references/domains/color.md` for domain-driven color guidance.
+
+Guide the user through:
+- 5+ domain vocabulary concepts (words from their world)
+- 5+ naturally occurring colors in this domain
 - 1 signature element unique to this product
 - 3 default choices being rejected (and why)
 
 **GATE — Do not proceed until:**
-- [ ] Domain vocabulary captured
-- [ ] Color world established
+- [ ] Domain vocabulary captured (5+ concepts)
+- [ ] Color world established (5+ colors)
 - [ ] Signature element defined
 - [ ] Rejected defaults documented with reasoning
+
+---
 
 ## Phase 3 — Direction & Tokens
 
 Read `references/foundations/design-directions.md` for presets.
-Read `references/domains/color.md`, `typography.md`, `spacing.md`, `motion.md` as needed.
+Read `references/domains/typography.md`, `spacing.md`, `motion.md` as needed.
 
 **GATE — Do not proceed until:**
 - [ ] Direction selected (preset, blend, or custom)
 - [ ] Tokens generated and saved to `.design-intelligence/tokens/`
 - [ ] Principles documented in `.design-intelligence/foundations/principles.md`
 
-[... remaining phases ...]
+---
+
+## Phase 4 — Design & Create
+
+Read `references/domains/interaction.md` for component state patterns.
+
+Create:
+- Component specs with states (default, hover, active, focus, disabled)
+- Wireframes and mockups using established tokens
+- Motion specs (timing, easing, triggers)
+
+**GATE — Do not proceed until:**
+- [ ] Components have all interaction states defined
+- [ ] Wireframes/mockups use tokens, not arbitrary values
+- [ ] Motion respects `prefers-reduced-motion`
+
+---
+
+## Phase 5 — Document & Handoff
+
+Generate design system documentation in `.design-intelligence/documentation/`.
+
+**GATE — Do not proceed until:**
+- [ ] All tokens documented with rationale
+- [ ] Component specs complete
+- [ ] Handoff format matches team needs
+
+---
+
+## Phase 6 — Audit
+
+Read `references/quality/audit-checklist.md` for full quality gates.
+Read `references/quality/accessibility.md` for AA/AAA requirements.
+Read `references/quality/critique-framework.md` for evaluation tests.
+
+Run:
+1. **Anti-slop check**: Does this look AI-generated? If yes, fix it.
+2. **Accessibility audit**: AA compliance minimum, AAA if configured
+3. **Consistency check**: All values trace to tokens
+4. **Critique tests**: Swap test, squint test, signature test
+
+**WARNING — Anti-slop rules are enforced by default.** Violations require explicit
+user confirmation to override. See `references/foundations/anti-patterns.md`.
+
+---
 
 ## Error Recovery
 
@@ -126,6 +196,7 @@ Read `references/domains/color.md`, `typography.md`, `spacing.md`, `motion.md` a
 | Domain exploration stalls | Suggest competitor analysis via `/design-reference` |
 | Token generation conflicts | Present trade-offs, let user decide |
 | Anti-slop rejection frustrates user | Explain why, offer to adjust strictness in config |
+| User wants to skip context | Explain why context matters, offer abbreviated version |
 
 ## Common Mistakes
 
@@ -134,6 +205,7 @@ Read `references/domains/color.md`, `typography.md`, `spacing.md`, `motion.md` a
 3. **Generating tokens before direction** — Direction informs token choices
 4. **Ignoring existing system** — Check for `.design-intelligence/` on session start
 5. **Over-prescribing** — Present options, don't dictate
+6. **Orphaned values** — Every color, spacing, motion value must trace to a token
 ```
 
 ### Reference File Structure
@@ -350,6 +422,33 @@ If scripts are added later, they must be made executable with `chmod +x` and use
       "Does NOT load design-intelligence skill",
       "Should trigger visual-documentation instead"
     ]
+  },
+  {
+    "name": "edge-case-ambiguous-design-word",
+    "prompt": "I need to skill up on design patterns",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill",
+      "Recognizes 'design patterns' as software patterns, not UI design"
+    ]
+  },
+  {
+    "name": "edge-case-implementation-vs-design",
+    "prompt": "Fix the button styling, it looks broken",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill for simple CSS fix",
+      "Handles as implementation task unless user asks for design guidance"
+    ]
+  },
+  {
+    "name": "edge-case-adjacent-topic",
+    "prompt": "Help me choose colors for my terminal theme",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill",
+      "Terminal themes are not product UI design"
+    ]
   }
 ]
 ```
@@ -365,9 +464,34 @@ If scripts are added later, they must be made executable with `chmod +x` and use
         "hooks": [
           {
             "type": "command",
-            "command": "test -f .design-intelligence/system.md && echo 'Design system found' || echo 'No design system'",
+            "command": "if [ -f .design-intelligence/system.md ]; then echo '{\"system_exists\": true, \"system_path\": \".design-intelligence/system.md\", \"config_path\": \".design-intelligence/config.json\"}'; else echo '{\"system_exists\": false}'; fi",
             "timeout": 2,
             "statusMessage": "Checking for design system..."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Hook behavior:** On session start, outputs JSON indicating whether a design system exists.
+When `system_exists: true`, Claude should immediately read `.design-intelligence/system.md`
+and `.design-intelligence/config.json` to load the established design context.
+
+**Alternative (prompt hook):** For more active loading, use a prompt hook:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if .design-intelligence/system.md exists. If it does, read it and config.json to understand the established design system. Acknowledge the loaded system briefly.",
+            "model": "haiku"
           }
         ]
       }
@@ -399,37 +523,59 @@ Check if `.design-intelligence/` already exists:
 
 ## Workflow
 
-1. **Context Gathering**
-   Read `references/foundations/design-directions.md` for exploration framework.
+### Step 1 — Context Gathering
 
-   Ask the user:
-   - Who is the primary user? (role, context, expertise)
-   - What must they accomplish? (core task, verb)
-   - How should this feel? (sensory language, not "clean and modern")
+Read `references/foundations/design-directions.md` for exploration framework.
 
-2. **Domain Exploration**
-   Guide user through:
-   - 5+ domain vocabulary concepts
-   - 5+ naturally occurring colors
-   - 1 signature element unique to this product
-   - 3 default choices being rejected (and why)
+Ask the user:
+- Who is the primary user? (role, context, expertise)
+- What must they accomplish? (core task, verb)
+- How should this feel? (sensory language, not "clean and modern")
 
-3. **Direction Selection**
-   Present 6 presets with recommendation based on exploration.
-   Allow blending or custom direction.
+**GATE — Do not proceed until:**
+- [ ] All three questions answered with specifics
+- [ ] "Clean and modern" rejected if offered
 
-4. **Token Foundation**
-   Invoke `token-architect` agent to generate initial tokens.
-   Save to `.design-intelligence/tokens/`.
+### Step 2 — Domain Exploration
 
-5. **Save System**
-   Create `.design-intelligence/system.md` with direction and principles.
-   Create `.design-intelligence/config.json` with defaults.
+Guide user through:
+- 5+ domain vocabulary concepts
+- 5+ naturally occurring colors
+- 1 signature element unique to this product
+- 3 default choices being rejected (and why)
+
+**GATE — Do not proceed until:**
+- [ ] Domain vocabulary captured (minimum 5)
+- [ ] Color world established (minimum 5)
+- [ ] Signature element articulated
+- [ ] Rejected defaults documented
+
+### Step 3 — Direction Selection
+
+Present 6 presets with recommendation based on exploration.
+Allow blending or custom direction.
+
+**GATE — Do not proceed until:**
+- [ ] Direction confirmed by user
+
+### Step 4 — Token Foundation
+
+Invoke `token-architect` agent to generate initial tokens.
+Save to `.design-intelligence/tokens/`.
+
+**GATE — Do not proceed until:**
+- [ ] All token files generated (colors, typography, spacing, motion, shadows, radii)
+- [ ] Tokens validated for accessibility (contrast ratios)
+
+### Step 5 — Save System
+
+Create `.design-intelligence/system.md` with direction and principles.
+Create `.design-intelligence/config.json` with defaults.
 
 ## Output
 
 - `.design-intelligence/` directory structure created
-- Initial tokens generated
+- Initial tokens generated and validated
 - System documented and ready for use
 ```
 
@@ -757,6 +903,7 @@ Each agent follows this structure:
 ---
 name: agent-name
 description: Brief description of agent purpose
+context: fork
 ---
 
 # Agent Name
@@ -781,12 +928,19 @@ You are a [role description]. Your purpose is [specific purpose].
 - [Guideline 2]
 ```
 
+**Note:** All design-intelligence agents use `context: fork` to run in isolated
+subagents. This ensures:
+- Clean context without conversation history bleeding in
+- Focused execution on the specific task
+- Clear inputs and outputs
+
 ### design-critic.md
 
 ```markdown
 ---
 name: design-critic
 description: Provides critical design feedback using swap, squint, and signature tests
+context: fork
 ---
 
 # Design Critic
@@ -830,6 +984,7 @@ in design decisions before they ship. Be direct, specific, and constructive.
 ---
 name: token-architect
 description: Generates and refines design token systems from direction and domain
+context: fork
 ---
 
 # Token Architect
@@ -873,6 +1028,7 @@ JSON files with inline comments explaining choices:
 ---
 name: reference-analyst
 description: Analyzes external references (URLs, images, products) for design patterns
+context: fork
 ---
 
 # Reference Analyst
