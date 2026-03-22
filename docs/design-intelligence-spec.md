@@ -84,6 +84,8 @@ plugins/design-intelligence/
 │
 ├── skills/design-intelligence/
 │   ├── SKILL.md                          # Core agent (~400 lines)
+│   ├── evals/
+│   │   └── evals.json                    # Trigger test cases
 │   └── references/
 │       ├── foundations/
 │       │   ├── laws-of-ux.md             # Fitts, Hick, Miller, Doherty + educational framing
@@ -131,11 +133,8 @@ plugins/design-intelligence/
 │   ├── token-architect.md
 │   └── reference-analyst.md
 │
-├── hooks/
-│   └── hooks.json                        # SessionStart: load existing system
-│
-└── evals/
-    └── evals.json                        # Trigger test cases
+└── hooks/
+    └── hooks.json                        # SessionStart: load existing system
 ```
 
 ### Evals
