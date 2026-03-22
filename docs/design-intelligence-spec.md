@@ -237,6 +237,14 @@ plugins/design-intelligence/
     └── hooks.json                        # SessionStart: load existing system
 ```
 
+**Note:** This plugin does not require a `scripts/` directory. All execution is handled by:
+- Inline hook commands (simple shell one-liners)
+- Sub-agents (design-critic, token-architect, reference-analyst)
+- Claude's built-in tools (WebFetch, Read, Write, etc.)
+
+If scripts are added later, they must be made executable with `chmod +x` and use
+`${CLAUDE_PLUGIN_ROOT}` for paths.
+
 ### Evals
 
 ```json
