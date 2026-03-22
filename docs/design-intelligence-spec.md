@@ -2,7 +2,7 @@
 
 **Date:** 2026-03-22
 **Status:** Draft
-**Version:** 0.1.0
+**Version:** 2026.3.22.0001
 
 ---
 
@@ -21,6 +21,55 @@ Product-minded users with taste who have intuitions about what they want but lac
 3. **Shows its reasoning** — educational mode explains the *why* (Laws of UX, anti-patterns)
 4. **Remembers and evolves** — persistent memory means decisions compound across sessions
 5. **Stays strict but flexible** — anti-AI-slop by default, configurable when context demands
+
+---
+
+## SKILL.md Specification
+
+### Frontmatter
+
+```yaml
+---
+name: design-intelligence
+description: >
+  Use when designing UI systems, creating design tokens, establishing visual direction,
+  critiquing interface designs, generating wireframes or mockups, or needing design
+  guidance for dashboards, SaaS, or product interfaces. Triggers on: design system,
+  design tokens, UI design, interface design, dashboard design, wireframe, mockup,
+  design critique, visual direction, typography system, color palette, spacing scale.
+disable-model-invocation: true
+---
+```
+
+**Why `disable-model-invocation: true`:** This skill has extensive side effects:
+- Creates/modifies files in `.design-intelligence/`
+- Generates token JSON files
+- Creates wireframe and mockup HTML files
+- Modifies configuration
+
+Users must explicitly invoke via `/design-init` or conversationally. Claude will not auto-trigger this skill.
+
+### SKILL.md Content Structure (~400 lines)
+
+The main SKILL.md contains:
+
+1. **Core Philosophy** (50 lines) — the 5 principles, design partner model
+2. **Workflow Overview** (30 lines) — Discover → Define → Design → Document → Audit
+3. **Context Gathering Gate** (40 lines) — mandatory questions before any design work
+4. **Domain Exploration Framework** (50 lines) — vocabulary, colors, signature, rejections
+5. **Direction Selection** (40 lines) — preset descriptions, blending rules
+6. **Anti-Slop Rules** (30 lines) — summary of rejections, strictness behavior
+7. **Memory System** (30 lines) — what files exist, when to read/write
+8. **Reference Loading Instructions** (50 lines) — when to load each reference doc
+9. **Command Overview** (50 lines) — brief list, detail in command files
+10. **Error Recovery** (30 lines) — common failure modes, fallbacks
+
+**All detailed content goes in `references/`:**
+- Laws of UX details → `references/foundations/laws-of-ux.md`
+- Full anti-pattern list → `references/foundations/anti-patterns.md`
+- Typography rules → `references/domains/typography.md`
+- Easing curves and timing → `references/domains/motion.md`
+- etc.
 
 ---
 
@@ -82,8 +131,134 @@ plugins/design-intelligence/
 │   ├── token-architect.md
 │   └── reference-analyst.md
 │
-└── hooks/
-    └── hooks.json                        # SessionStart: load existing system
+├── hooks/
+│   └── hooks.json                        # SessionStart: load existing system
+│
+└── evals/
+    └── evals.json                        # Trigger test cases
+```
+
+### Evals
+
+```json
+[
+  {
+    "name": "natural-design-request",
+    "prompt": "Help me design a dashboard for tracking sales metrics",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Asks about target audience before proposing design",
+      "Explores domain vocabulary",
+      "Does not immediately generate code"
+    ]
+  },
+  {
+    "name": "token-system-request",
+    "prompt": "I need a color palette and typography scale for my app",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Asks about brand feel or direction",
+      "Proposes design direction before tokens"
+    ]
+  },
+  {
+    "name": "critique-request",
+    "prompt": "Can you critique this UI design?",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Runs swap test, squint test, signature test",
+      "Provides ranked issues"
+    ]
+  },
+  {
+    "name": "wireframe-request",
+    "prompt": "Create a wireframe for a settings page",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Checks for existing design system",
+      "Asks clarifying questions if no system exists"
+    ]
+  }
+]
+```
+
+### Hooks
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f .design-intelligence/system.md && echo 'Design system found' || echo 'No design system'",
+            "timeout": 2,
+            "statusMessage": "Checking for design system..."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Command File Template
+
+Each command follows this structure:
+
+```yaml
+---
+command: design-init
+description: Initialize a new design system with domain exploration and direction selection
+disable-model-invocation: true
+---
+
+# /design-init
+
+Initialize a new design system for this project.
+
+## Prerequisites
+
+Check if `.design-intelligence/` already exists:
+- If yes: warn user, confirm before overwriting
+- If no: proceed with initialization
+
+## Workflow
+
+1. **Context Gathering**
+   Read `references/foundations/design-directions.md` for exploration framework.
+
+   Ask the user:
+   - Who is the primary user? (role, context, expertise)
+   - What must they accomplish? (core task, verb)
+   - How should this feel? (sensory language, not "clean and modern")
+
+2. **Domain Exploration**
+   Guide user through:
+   - 5+ domain vocabulary concepts
+   - 5+ naturally occurring colors
+   - 1 signature element unique to this product
+   - 3 default choices being rejected (and why)
+
+3. **Direction Selection**
+   Present 6 presets with recommendation based on exploration.
+   Allow blending or custom direction.
+
+4. **Token Foundation**
+   Invoke `token-architect` agent to generate initial tokens.
+   Save to `.design-intelligence/tokens/`.
+
+5. **Save System**
+   Create `.design-intelligence/system.md` with direction and principles.
+   Create `.design-intelligence/config.json` with defaults.
+
+## Output
+
+- `.design-intelligence/` directory structure created
+- Initial tokens generated
+- System documented and ready for use
 ```
 
 ### Generated Project Memory
@@ -379,9 +554,67 @@ The plugin synthesizes knowledge from five authoritative sources:
 
 ---
 
+## Marketplace Entry
+
+Add to `.claude-plugin/marketplace.json`:
+
+```json
+{
+  "name": "design-intelligence",
+  "description": "Intelligent design partner for UI systems. Handles domain exploration, design direction, token generation, wireframes, mockups, and critique. Produces framework-agnostic specs and documentation.",
+  "version": "2026.3.22.0001",
+  "author": {
+    "name": "Prakhar Bhardwaj",
+    "url": "https://github.com/prakhar625"
+  },
+  "source": "./plugins/design-intelligence",
+  "category": "design",
+  "tags": [
+    "design-system",
+    "design-tokens",
+    "ui-design",
+    "wireframes",
+    "mockups",
+    "accessibility",
+    "typography",
+    "color-system",
+    "spacing",
+    "motion-design",
+    "design-critique"
+  ]
+}
+```
+
+---
+
+## External Dependencies
+
+This plugin has **no external dependencies**. All outputs are generated through:
+
+- **Tokens:** JSON files written directly
+- **Wireframes/Mockups:** HTML files with inline CSS, viewable in any browser
+- **Documentation:** Markdown files
+- **Analysis:** Claude's built-in capabilities (no external APIs)
+
+For `/design-reference` with URLs:
+- Uses Claude Code's `WebFetch` tool (built-in)
+- Image analysis uses Claude's vision capabilities (built-in)
+
+---
+
 ## Out of Scope
 
 - Visual documentation of existing codebases (use `visual-documentation` plugin)
 - Marketing/landing page design (different concerns than product UI)
-- Actual implementation — this plugin produces specs, not code
+- Actual implementation — this plugin produces specs and tokens, not production code
 - Brand identity creation (logos, brand guidelines) — product UI only
+
+---
+
+## Open Questions (To Resolve During Implementation)
+
+1. **Framework detection:** How precisely should we detect React vs Vue vs Svelte? Current plan: scan `package.json` for framework dependencies. Fallback: ask user.
+
+2. **Wireframe vs mockup distinction from visual-documentation:** This plugin's wireframes are *design artifacts* (part of the design process, informed by tokens and direction). Visual-documentation's wireframes are *documentation artifacts* (illustrating existing UI). Different purpose, similar output format.
+
+3. **Sound module integration point:** Currently documented as optional. During implementation, decide if it needs a dedicated command or just reference doc access.
