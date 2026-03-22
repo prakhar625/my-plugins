@@ -1,0 +1,131 @@
+[
+  {
+    "name": "natural-design-request",
+    "prompt": "Help me design a dashboard for tracking sales metrics",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Asks about target audience before proposing design",
+      "Explores domain vocabulary",
+      "Does not immediately generate code",
+      "Offers design direction options"
+    ]
+  },
+  {
+    "name": "token-system-request",
+    "prompt": "I need a color palette and typography scale for my app",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Asks about brand feel or direction",
+      "Proposes design direction before tokens",
+      "Uses OKLCH for color definitions",
+      "Generates semantic mappings, not just primitives"
+    ]
+  },
+  {
+    "name": "critique-request",
+    "prompt": "Can you critique this UI design?",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Runs swap test, squint test, signature test",
+      "Provides ranked issues (critical/major/minor)",
+      "Offers specific fixes for each issue",
+      "Acknowledges strengths, not just problems"
+    ]
+  },
+  {
+    "name": "wireframe-request",
+    "prompt": "Create a wireframe for a settings page",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Checks for existing design system",
+      "Asks clarifying questions if no system exists",
+      "Applies established tokens if system exists"
+    ]
+  },
+  {
+    "name": "vague-feel-request",
+    "prompt": "I want something that feels premium but approachable",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Translates vague language into concrete direction",
+      "Suggests Sophistication + Warmth blend",
+      "Asks follow-up questions to refine"
+    ]
+  },
+  {
+    "name": "reference-capture-request",
+    "prompt": "I really like how Linear looks, can we use that as inspiration?",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Offers to analyze Linear via /design-reference",
+      "Extracts principles, not direct copies",
+      "Connects insights to user's domain"
+    ]
+  },
+  {
+    "name": "anti-slop-enforcement",
+    "prompt": "Add some glassmorphism and a gradient background",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Warns about anti-slop patterns",
+      "Explains why these patterns are problematic",
+      "Offers to adjust strictness if user insists",
+      "Requires explicit confirmation to override"
+    ]
+  },
+  {
+    "name": "existing-system-continuation",
+    "prompt": "Let's add a new component to our design system",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Checks for .design-intelligence/ directory",
+      "Loads existing system.md and tokens",
+      "Ensures new component follows established patterns"
+    ]
+  },
+  {
+    "name": "negative-test-unrelated",
+    "prompt": "Refactor the database connection pool",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill",
+      "Handles as normal coding task"
+    ]
+  },
+  {
+    "name": "negative-test-visual-docs",
+    "prompt": "Create an architecture diagram of our codebase",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill",
+      "Should trigger visual-documentation instead"
+    ]
+  },
+  {
+    "name": "edge-case-ambiguous-design-word",
+    "prompt": "I need to skill up on design patterns",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill",
+      "Recognizes 'design patterns' as software patterns, not UI design"
+    ]
+  },
+  {
+    "name": "edge-case-implementation-vs-design",
+    "prompt": "Fix the button styling, it looks broken",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill for simple CSS fix",
+      "Handles as implementation task unless user asks for design guidance"
+    ]
+  },
+  {
+    "name": "edge-case-adjacent-topic",
+    "prompt": "Help me choose colors for my terminal theme",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill",
+      "Terminal themes are not product UI design"
+    ]
+  }
+]
