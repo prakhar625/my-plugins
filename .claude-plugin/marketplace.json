@@ -91,6 +91,30 @@
         "html",
         "visualization"
       ]
+    },
+    {
+      "name": "design-intelligence",
+      "description": "Intelligent design partner for UI systems. Handles domain exploration, design direction, token generation, wireframes, mockups, and critique. Produces framework-agnostic specs and documentation.",
+      "version": "2026.3.22.0001",
+      "author": {
+        "name": "Prakhar Bhardwaj",
+        "url": "https://github.com/prakhar625"
+      },
+      "source": "./plugins/design-intelligence",
+      "category": "design",
+      "tags": [
+        "design-system",
+        "design-tokens",
+        "ui-design",
+        "wireframes",
+        "mockups",
+        "accessibility",
+        "typography",
+        "color-system",
+        "spacing",
+        "motion-design",
+        "design-critique"
+      ]
     }
   ]
 }
