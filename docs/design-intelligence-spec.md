@@ -264,30 +264,137 @@ Check if `.design-intelligence/` already exists:
 
 ```
 .design-intelligence/
-├── system.md                    # Core design system definition
+├── system.md                    # Core design system definition (source of truth)
 ├── config.json                  # User configuration
 │
 ├── foundations/
 │   ├── direction.md             # Chosen direction + rationale
 │   ├── principles.md            # What we will/won't do
-│   └── audience.md              # Who, what, how it should feel
+│   ├── audience.md              # Who, what, how it should feel
+│   ├── approach.md              # Thought process, methodology, reasoning approach
+│   └── custom-directions/       # User-defined direction presets
+│       └── [name].yaml
 │
 ├── tokens/
-│   ├── colors.json
-│   ├── typography.json
-│   ├── spacing.json
-│   ├── motion.json
-│   ├── radii.json
-│   └── shadows.json
+│   ├── colors.json              # Primitives + semantic mappings
+│   ├── typography.json          # Font stacks, scales, line heights, tracking
+│   ├── spacing.json             # Base unit, scale, contextual values
+│   ├── motion.json              # Durations, easings (cubic-bezier), triggers, a11y
+│   ├── radii.json               # Border radius scale
+│   └── shadows.json             # Elevation system, layered shadows
 │
-├── components/                  # Component specs
+├── components/                  # Component specs (buttons, inputs, cards, etc.)
 ├── patterns/                    # Navigation, data-display, feedback, forms
+│
 ├── references/                  # Extracted from /design-reference
-├── wireframes/                  # Generated wireframe files
-├── mockups/                     # Generated mockup files
+│   └── [source-name].md         # Analysis of external references
+│
+├── explorations/                # Intermediates: drafts, iterations, alternatives
+│   └── [date]-[topic].md        # Exploration before final decision
+│
+├── wireframes/                  # Generated wireframe HTML/SVG files
+├── mockups/                     # Generated mockup HTML files
+│
 ├── decisions/                   # Decision log with rationale
+│   └── [date]-[topic].md        # Why we chose X over Y
+│
+├── documentation/               # Generated design system docs
+│   └── design-system.md         # Full documentation for handoff
+│
 └── history/
-    └── changelog.md
+    └── changelog.md             # Evolution over time, version history
+```
+
+### Explorations (Intermediates)
+
+`explorations/` captures drafts, alternatives, and iterations before final decisions:
+
+```markdown
+# explorations/2026-03-22-color-direction.md
+
+## Context
+Exploring color direction for healthcare analytics dashboard.
+
+## Options Explored
+
+### Option A: Clinical Blue
+- Primary: oklch(55% 0.15 250)
+- Pros: Trustworthy, professional, healthcare-associated
+- Cons: Cold, sterile, overused in healthcare
+
+### Option B: Warm Teal
+- Primary: oklch(62% 0.12 195)
+- Pros: Trust + warmth, distinctive, calming
+- Cons: Less conventional for healthcare
+
+### Option C: Sage Green
+- Primary: oklch(58% 0.08 150)
+- Pros: Natural, calming, growth-oriented
+- Cons: May feel too casual for analytics
+
+## Decision
+Chose Option B (Warm Teal). See `decisions/2026-03-22-color-direction.md` for rationale.
+
+## Artifacts
+- [color-exploration-a.html](../wireframes/explorations/color-a.html)
+- [color-exploration-b.html](../wireframes/explorations/color-b.html)
+```
+
+### Approach Document
+
+`foundations/approach.md` captures the thought process and methodology:
+
+```markdown
+# Design Approach
+
+## Methodology
+How we approach design decisions for this project.
+
+## Reasoning Framework
+- Primary consideration: [e.g., "User efficiency over visual polish"]
+- Secondary consideration: [e.g., "Accessibility always, delight when possible"]
+- Tie-breaker: [e.g., "When in doubt, choose clarity"]
+
+## Influences
+- Domain: [e.g., "Healthcare analytics — trust and precision matter"]
+- References: [e.g., "Linear's density, Stripe's clarity, Notion's warmth"]
+- Constraints: [e.g., "Must work on low-bandwidth connections"]
+
+## Evolution Notes
+- 2026-03-22: Started with Sophistication preset, added Utility influences
+- 2026-03-25: Shifted from blue to teal after domain exploration revealed...
+```
+
+### Motion Tokens Detail
+
+`motion.json` captures:
+
+```json
+{
+  "durations": {
+    "instant": "0ms",
+    "fast": "150ms",
+    "normal": "250ms",
+    "slow": "400ms",
+    "deliberate": "600ms"
+  },
+  "easings": {
+    "default": "cubic-bezier(0.23, 1, 0.32, 1)",
+    "enter": "cubic-bezier(0.21, 1.02, 0.73, 1)",
+    "exit": "cubic-bezier(0.06, 0.71, 0.55, 1)",
+    "inOut": "cubic-bezier(0.77, 0, 0.175, 1)",
+    "spring": "cubic-bezier(0.175, 0.885, 0.32, 1.275)"
+  },
+  "reducedMotion": {
+    "respectPreference": true,
+    "fallback": "opacity-only"
+  },
+  "patterns": {
+    "buttonPress": { "duration": "fast", "easing": "default", "transform": "scale(0.97)" },
+    "popoverEnter": { "duration": "normal", "easing": "enter", "transform": "scale(0.95) → scale(1)" },
+    "toastSlide": { "duration": "normal", "easing": "enter", "transform": "translateY(100%) → translateY(0)" }
+  }
+}
 ```
 
 ---
@@ -402,8 +509,39 @@ DISCOVER → DEFINE → DESIGN → DOCUMENT → AUDIT
 
 - Presets serve as starting points
 - Domain exploration can override or blend presets
-- Users can define custom directions in `.design-intelligence/foundations/custom-directions/`
+- Users can define custom directions in `.design-intelligence/foundations/custom-directions/[name].yaml`
 - Custom directions can inherit from presets via `based_on` field
+- Custom directions can be referenced by name in `/design-direction` or conversationally
+
+### Custom Direction Template
+
+```yaml
+# .design-intelligence/foundations/custom-directions/my-brand.yaml
+name: my-brand-direction
+tagline: "Clinical precision meets human warmth"
+based_on: [precision, warmth]  # Optional: inherit from presets
+
+overrides:
+  color:
+    temperature: neutral
+    primary: "oklch(65% 0.15 220)"
+  typography:
+    display: "Söhne"
+    body: "Inter"
+  motion:
+    speed: fast
+    easing: "cubic-bezier(0.23, 1, 0.32, 1)"
+
+principles:
+  - "Data density without overwhelm"
+  - "Warmth in copy, precision in layout"
+  - "Motion only on user-initiated actions"
+
+anti-patterns:
+  - "Decorative illustrations"
+  - "Rounded buttons"
+  - "Bounce easing"
+```
 
 ---
 
