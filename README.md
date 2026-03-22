@@ -12,6 +12,7 @@ A collection of Claude Code plugins for creative and developer workflows.
 | **[skill-best-practices](plugins/skill-best-practices/)** | Comprehensive guide for building Claude Code skills and plugins, with an interactive `/create-skill` wizard | [docs/skill-best-practices.md](docs/skill-best-practices.md) |
 | **[image-gen](plugins/image-gen/)** | Generate, edit, and enhance images using FAL AI — 13 models including Imagen 4, FLUX.2, Grok Imagine, and Seedream | [docs/image-gen.md](docs/image-gen.md) |
 | **[visual-documentation](plugins/visual-documentation/)** | Create architecture diagrams, flowcharts, lo-fi wireframes, technical docs, and project timelines — HTML, Mermaid, and DOT formats | [docs/visual-documentation.md](docs/visual-documentation.md) |
+| **[design-intelligence](plugins/design-intelligence/)** | Intelligent design partner for UI systems — domain exploration, design tokens, wireframes, mockups, and critique | [docs/design-intelligence.md](docs/design-intelligence.md) |
 
 ---
 
@@ -60,20 +61,27 @@ Then enable in Claude Code with `/plugin`. Restart after installing.
 │   │   │   ├── image-edit/
 │   │   │   └── image-enhance/
 │   │   └── hooks/
-│   └── visual-documentation/         # Visual documentation plugin
+│   ├── visual-documentation/         # Visual documentation plugin
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── commands/
+│   │   └── skills/
+│   │       ├── architecture-diagram-creator/
+│   │       ├── flowchart-creator/
+│   │       ├── mockup-creator/
+│   │       ├── technical-doc-creator/
+│   │       └── timeline-creator/
+│   └── design-intelligence/          # Design system intelligence plugin
 │       ├── .claude-plugin/plugin.json
+│       ├── agents/
 │       ├── commands/
-│       └── skills/
-│           ├── architecture-diagram-creator/
-│           ├── flowchart-creator/
-│           ├── mockup-creator/
-│           ├── technical-doc-creator/
-│           └── timeline-creator/
+│       ├── hooks/
+│       └── skills/design-intelligence/
 ├── docs/                             # Per-plugin documentation
 │   ├── interaction-recorder.md
 │   ├── skill-best-practices.md
 │   ├── image-gen.md
-│   └── visual-documentation.md
+│   ├── visual-documentation.md
+│   └── design-intelligence.md
 ├── README.md
 └── LICENSE
 ```
