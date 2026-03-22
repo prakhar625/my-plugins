@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f .design-intelligence/system.md ]; then echo '{\"system_exists\": true, \"system_path\": \".design-intelligence/system.md\", \"config_path\": \".design-intelligence/config.json\"}'; else echo '{\"system_exists\": false}'; fi",
+            "timeout": 2,
+            "statusMessage": "Checking for design system..."
+          }
+        ]
+      }
+    ]
+  }
+}
