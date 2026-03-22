@@ -71,6 +71,106 @@ The main SKILL.md contains:
 - Easing curves and timing → `references/domains/motion.md`
 - etc.
 
+### SKILL.md Body Structure
+
+```markdown
+# Design Intelligence
+
+## Overview
+An intelligent design partner for product UI. Explores context before prescribing,
+translates vague feelings into concrete decisions, and maintains persistent memory.
+
+## Workflow
+Discover → Define → Design → Document → Audit
+
+## Phase 1 — Context Gathering
+
+**GATE — Do not proceed until:**
+- [ ] Audience defined (who is this human, not "users")
+- [ ] Core task identified (the verb)
+- [ ] Feel articulated (sensory language, not "clean and modern")
+
+Read `references/foundations/design-directions.md` for exploration framework.
+
+## Phase 2 — Domain Exploration
+
+Guide through:
+- 5+ domain vocabulary concepts
+- 5+ naturally occurring colors
+- 1 signature element unique to this product
+- 3 default choices being rejected (and why)
+
+**GATE — Do not proceed until:**
+- [ ] Domain vocabulary captured
+- [ ] Color world established
+- [ ] Signature element defined
+- [ ] Rejected defaults documented with reasoning
+
+## Phase 3 — Direction & Tokens
+
+Read `references/foundations/design-directions.md` for presets.
+Read `references/domains/color.md`, `typography.md`, `spacing.md`, `motion.md` as needed.
+
+**GATE — Do not proceed until:**
+- [ ] Direction selected (preset, blend, or custom)
+- [ ] Tokens generated and saved to `.design-intelligence/tokens/`
+- [ ] Principles documented in `.design-intelligence/foundations/principles.md`
+
+[... remaining phases ...]
+
+## Error Recovery
+
+| Failure | Recovery |
+|---------|----------|
+| User can't articulate feel | Offer reference products: "Does it feel more like Linear or Notion?" |
+| Domain exploration stalls | Suggest competitor analysis via `/design-reference` |
+| Token generation conflicts | Present trade-offs, let user decide |
+| Anti-slop rejection frustrates user | Explain why, offer to adjust strictness in config |
+
+## Common Mistakes
+
+1. **Skipping context gathering** — Always ask the three questions first
+2. **Accepting "clean and modern"** — Push for specific sensory language
+3. **Generating tokens before direction** — Direction informs token choices
+4. **Ignoring existing system** — Check for `.design-intelligence/` on session start
+5. **Over-prescribing** — Present options, don't dictate
+```
+
+### Reference File Structure
+
+Each reference document follows this structure:
+
+```markdown
+# [Topic] Reference
+
+## Goal
+One sentence: what this reference helps accomplish.
+
+## Prerequisites
+- [ ] Design direction established
+- [ ] Relevant context gathered
+
+## Content
+
+### [Subsection 1]
+Detailed guidance with examples.
+
+### [Subsection 2]
+More guidance...
+
+## Validation Gates
+
+**Before applying [topic]:**
+- [ ] Check 1
+- [ ] Check 2
+
+## Common Failure Modes
+
+| Failure | Cause | Fix |
+|---------|-------|-----|
+| ... | ... | ... |
+```
+
 ---
 
 ## Architecture
@@ -148,7 +248,8 @@ plugins/design-intelligence/
     "expected_behaviors": [
       "Asks about target audience before proposing design",
       "Explores domain vocabulary",
-      "Does not immediately generate code"
+      "Does not immediately generate code",
+      "Offers design direction options"
     ]
   },
   {
@@ -157,7 +258,9 @@ plugins/design-intelligence/
     "expected_trigger": "design-intelligence",
     "expected_behaviors": [
       "Asks about brand feel or direction",
-      "Proposes design direction before tokens"
+      "Proposes design direction before tokens",
+      "Uses OKLCH for color definitions",
+      "Generates semantic mappings, not just primitives"
     ]
   },
   {
@@ -166,7 +269,9 @@ plugins/design-intelligence/
     "expected_trigger": "design-intelligence",
     "expected_behaviors": [
       "Runs swap test, squint test, signature test",
-      "Provides ranked issues"
+      "Provides ranked issues (critical/major/minor)",
+      "Offers specific fixes for each issue",
+      "Acknowledges strengths, not just problems"
     ]
   },
   {
@@ -175,7 +280,67 @@ plugins/design-intelligence/
     "expected_trigger": "design-intelligence",
     "expected_behaviors": [
       "Checks for existing design system",
-      "Asks clarifying questions if no system exists"
+      "Asks clarifying questions if no system exists",
+      "Applies established tokens if system exists"
+    ]
+  },
+  {
+    "name": "vague-feel-request",
+    "prompt": "I want something that feels premium but approachable",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Translates vague language into concrete direction",
+      "Suggests Sophistication + Warmth blend",
+      "Asks follow-up questions to refine"
+    ]
+  },
+  {
+    "name": "reference-capture-request",
+    "prompt": "I really like how Linear looks, can we use that as inspiration?",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Offers to analyze Linear via /design-reference",
+      "Extracts principles, not direct copies",
+      "Connects insights to user's domain"
+    ]
+  },
+  {
+    "name": "anti-slop-enforcement",
+    "prompt": "Add some glassmorphism and a gradient background",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Warns about anti-slop patterns",
+      "Explains why these patterns are problematic",
+      "Offers to adjust strictness if user insists",
+      "Requires explicit confirmation to override"
+    ]
+  },
+  {
+    "name": "existing-system-continuation",
+    "prompt": "Let's add a new component to our design system",
+    "expected_trigger": "design-intelligence",
+    "expected_behaviors": [
+      "Checks for .design-intelligence/ directory",
+      "Loads existing system.md and tokens",
+      "Ensures new component follows established patterns"
+    ]
+  },
+  {
+    "name": "negative-test-unrelated",
+    "prompt": "Refactor the database connection pool",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill",
+      "Handles as normal coding task"
+    ]
+  },
+  {
+    "name": "negative-test-visual-docs",
+    "prompt": "Create an architecture diagram of our codebase",
+    "expected_trigger": null,
+    "expected_behaviors": [
+      "Does NOT load design-intelligence skill",
+      "Should trigger visual-documentation instead"
     ]
   }
 ]
@@ -445,52 +610,81 @@ DISCOVER → DEFINE → DESIGN → DOCUMENT → AUDIT
 
 ### Initialization & Direction
 
-| Command | Description |
-|---------|-------------|
-| `/design-init` | Start fresh: domain exploration, direction selection, token foundation |
-| `/design-direction` | View/change design direction (preset, custom, or blend) |
-| `/design-context` | Update audience, use cases, or brand context without full reinit |
+| Command | Argument Hint | Description |
+|---------|---------------|-------------|
+| `/design-init` | — | Start fresh: domain exploration, direction selection, token foundation |
+| `/design-direction` | `[preset-name]` | View/change design direction (preset, custom, or blend) |
+| `/design-context` | — | Update audience, use cases, or brand context without full reinit |
 
 ### Token & System Management
 
-| Command | Description |
-|---------|-------------|
-| `/design-tokens` | View, edit, or regenerate token system |
-| `/design-components` | Define or view component specs |
-| `/design-extract` | Extract design patterns from existing code into the system |
-| `/design-reference` | Capture inspiration from external sources: URLs, images, products |
+| Command | Argument Hint | Description |
+|---------|---------------|-------------|
+| `/design-tokens` | `[token-type]` | View, edit, or regenerate token system (colors, typography, spacing, motion) |
+| `/design-components` | `[component-name]` | Define or view component specs |
+| `/design-extract` | `[path]` | Extract design patterns from existing code into the system |
+| `/design-reference` | `[url-or-path]` | Capture inspiration from external sources: URLs, images, products |
 
 ### Creation & Refinement
 
-| Command | Description |
-|---------|-------------|
-| `/design-wireframe` | Generate lo-fi wireframe for a view/component |
-| `/design-mockup` | Generate higher-fidelity mockup with tokens applied |
-| `/design-refine` | Iteratively improve a specific element or view |
-| `/design-animate` | Add/define motion specs for components or transitions |
+| Command | Argument Hint | Description |
+|---------|---------------|-------------|
+| `/design-wireframe` | `[view-name]` | Generate lo-fi wireframe for a view/component |
+| `/design-mockup` | `[view-name]` | Generate higher-fidelity mockup with tokens applied |
+| `/design-refine` | `[element]` | Iteratively improve a specific element or view |
+| `/design-animate` | `[component]` | Add/define motion specs for components or transitions |
 
 ### Quality & Critique
 
-| Command | Description |
-|---------|-------------|
-| `/design-audit` | Full audit: anti-slop, consistency, accessibility (AA) |
-| `/design-audit-aaa` | Advanced accessibility audit (WCAG AAA) |
-| `/design-critique` | Get critical feedback on current design decisions |
-| `/design-polish` | Final pass: micro-refinements, edge cases, delight details |
+| Command | Argument Hint | Description |
+|---------|---------------|-------------|
+| `/design-audit` | `[path]` | Full audit: anti-slop, consistency, accessibility (AA) |
+| `/design-audit-aaa` | `[path]` | Advanced accessibility audit (WCAG AAA) |
+| `/design-critique` | — | Get critical feedback on current design decisions |
+| `/design-polish` | — | Final pass: micro-refinements, edge cases, delight details |
 
 ### Documentation & Handoff
 
-| Command | Description |
-|---------|-------------|
-| `/design-document` | Generate/update design system documentation |
-| `/design-handoff` | Prepare implementation-ready specs for developers |
-| `/design-history` | View decision history and evolution |
+| Command | Argument Hint | Description |
+|---------|---------------|-------------|
+| `/design-document` | — | Generate/update design system documentation |
+| `/design-handoff` | `[format]` | Prepare implementation-ready specs (format: figma, markdown, json) |
+| `/design-history` | — | View decision history and evolution |
 
 ### Configuration
 
-| Command | Description |
-|---------|-------------|
-| `/design-config` | Configure strictness, a11y level, educational mode, sound module |
+| Command | Argument Hint | Description |
+|---------|---------------|-------------|
+| `/design-config` | `[setting]` | Configure strictness, a11y level, educational mode, sound module |
+
+### Command File Template (with argument-hint)
+
+```yaml
+---
+command: design-reference
+argument-hint: "[url-or-path]"
+description: Capture inspiration from external sources: URLs, images, products
+disable-model-invocation: true
+---
+
+# /design-reference [url-or-path]
+
+Analyze an external reference and extract design patterns.
+
+## Arguments
+- `$0` — URL to a website, path to an image, or product name
+
+## Workflow
+1. Invoke `reference-analyst` agent with the provided URL/path
+2. Save analysis to `.design-intelligence/references/[source-name].md`
+3. Summarize key insights to user
+4. Offer to incorporate insights into direction
+
+## Examples
+- `/design-reference https://linear.app`
+- `/design-reference ./inspiration/competitor.png`
+- `/design-reference "Stripe dashboard"`
+```
 
 ---
 
@@ -547,24 +741,187 @@ anti-patterns:
 
 ## Sub-Agents
 
+### Agent File Structure
+
+Each agent follows this structure:
+
+```markdown
+---
+name: agent-name
+description: Brief description of agent purpose
+---
+
+# Agent Name
+
+## Role
+You are a [role description]. Your purpose is [specific purpose].
+
+## Inputs
+- **Required:** [what the agent receives]
+- **Optional:** [additional context]
+
+## Process
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+
+## Output Format
+[Specific format the agent returns]
+
+## Guidelines
+- [Guideline 1]
+- [Guideline 2]
+```
+
 ### design-critic.md
 
-- **Invoked by:** `/design-critique`
-- **Purpose:** Critical, honest feedback on design decisions
-- **Approach:** Swap test, squint test, signature test
-- **Output:** Ranked issues (critical/major/minor), specific fixes
+```markdown
+---
+name: design-critic
+description: Provides critical design feedback using swap, squint, and signature tests
+---
+
+# Design Critic
+
+## Role
+You are a demanding design critic. Your purpose is to identify weaknesses
+in design decisions before they ship. Be direct, specific, and constructive.
+
+## Inputs
+- **Required:** Design artifacts to critique (system.md, tokens, components, mockups)
+- **Optional:** Specific areas of concern
+
+## Process
+1. **Swap Test:** Would swapping the typeface or layout template affect perception?
+2. **Squint Test:** Does hierarchy persist when blurred?
+3. **Signature Test:** Can you locate 5+ elements carrying the design's signature?
+
+## Output Format
+### Critical Issues (must fix)
+- [Issue]: [Why it matters] → [Specific fix]
+
+### Major Issues (should fix)
+- [Issue]: [Why it matters] → [Specific fix]
+
+### Minor Issues (nice to fix)
+- [Issue]: [Why it matters] → [Specific fix]
+
+### Strengths
+- [What's working well]
+
+## Guidelines
+- Never say "looks good" without evidence
+- Every issue must have a specific fix
+- Acknowledge what's working, not just problems
+- Rank by impact on user experience
+```
 
 ### token-architect.md
 
-- **Invoked by:** `/design-tokens`, `/design-init`
-- **Purpose:** Generate and refine token systems
-- **Output:** JSON token files with rationale comments
+```markdown
+---
+name: token-architect
+description: Generates and refines design token systems from direction and domain
+---
+
+# Token Architect
+
+## Role
+You are a systematic design token architect. Your purpose is to derive
+coherent token systems from design direction and domain exploration.
+
+## Inputs
+- **Required:** Design direction (from `.design-intelligence/foundations/direction.md`)
+- **Optional:** Domain exploration, reference analysis, existing tokens
+
+## Process
+1. Read direction and understand the feel
+2. Derive color primitives using OKLCH
+3. Build semantic color mappings
+4. Establish typography scale
+5. Define spacing system from base unit
+6. Create motion tokens (durations, easings)
+7. Add shadows and radii
+
+## Output Format
+JSON files with inline comments explaining choices:
+- `colors.json`
+- `typography.json`
+- `spacing.json`
+- `motion.json`
+- `shadows.json`
+- `radii.json`
+
+## Guidelines
+- Every token must trace back to a primitive
+- Explain WHY in comments, not just WHAT
+- Check accessibility (contrast ratios) during color generation
+- Use OKLCH for perceptual uniformity
+```
 
 ### reference-analyst.md
 
-- **Invoked by:** `/design-reference`
-- **Purpose:** Analyze external references (URLs, images, products)
-- **Output:** Structured analysis in `.design-intelligence/references/`
+```markdown
+---
+name: reference-analyst
+description: Analyzes external references (URLs, images, products) for design patterns
+---
+
+# Reference Analyst
+
+## Role
+You are a design pattern analyst. Your purpose is to extract actionable
+insights from external references without copying directly.
+
+## Inputs
+- **Required:** URL, image path, or product name
+- **Optional:** Specific aspects to focus on
+
+## Process
+1. Fetch/analyze the reference
+2. Identify color palette and usage patterns
+3. Note typography choices (faces, scales, weights)
+4. Analyze spacing rhythm and density
+5. Observe motion/interaction patterns
+6. Capture overall vibe and differentiators
+
+## Output Format
+Save to `.design-intelligence/references/[source-name].md`:
+
+### [Source Name] Analysis
+
+**Overall Vibe:** [1-2 sentence impression]
+
+**Color Palette:**
+- Primary: [color + usage]
+- Secondary: [color + usage]
+- Neutrals: [approach]
+
+**Typography:**
+- Display: [face, usage]
+- Body: [face, usage]
+- Scale: [observations]
+
+**Spacing:**
+- Density: [loose/medium/tight]
+- Rhythm: [observations]
+
+**Motion:**
+- Speed: [fast/medium/deliberate]
+- Character: [observations]
+
+**Signature Elements:**
+- [Unique element 1]
+- [Unique element 2]
+
+**Applicable Insights:**
+- [How this applies to current project]
+
+## Guidelines
+- Extract principles, don't copy specifics
+- Note what makes the reference distinctive
+- Connect insights to the current project's domain
+```
 
 ---
 
